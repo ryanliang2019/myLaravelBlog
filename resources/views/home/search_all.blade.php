@@ -1,64 +1,93 @@
-@extends('home.layouts.home_header_footer')
+@extends('home.layouts.home_outter')
+
 @section('info')
-    <title>Search - {{Config::get('myWebConfig._web_title_')}}</title>
+	<title>Search - {{Config::get('myWebConfig._web_title_')}}</title>
     <meta name="keywords" content="{{$search}}" />
     <meta name="description" content="" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 @endsection
+
 @section('content')
-    <article>
-        <h1 class="t_nav">
-			<span>Search all</span>
-			<a href="{{url('/')}}" class="n1">Home</a>
-		</h1>
-        <div class="newblog left">
-		  @if($msg)
-			<h2>{{$msg}}</h2>
-		  @endif
 
-			<div class="box" style="padding:20px; ">
-            	<form action="{{url('search/all')}}" method="post">
-                	{{csrf_field()}}
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({{asset('home/img/about-bg.jpg')}})">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading" style="padding: 100px 0;">
+			<h1>Search all</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-                	<input type="text" placeholder="Search for article" name="search" style="line-height:16px;font-size:16px;width:50%;margin-right:5px;padding:6px 5px;">
-                	<button type="submit" style="line-height:16px;font-size:16px;height:30px;width:80px;">Search</button>
-            	</form>
-        	</div>
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
 
-		  @if(count($data)>=1)
-            @foreach($data as $d)
-            <h2>{{$d->article_title}}</h2>
-            <p class="dateview" style="padding-left:35px;"><span style="margin-right:30px;">{{date($d->creation_date)}}</span><span style="margin-right:30px;">By: {{$d->article_by}}</span><span>Category: [<a href="{{url('cate/'.$d->id)}}">{{$d->cate_name}}</a>]</span></p>
+		<ol class="breadcrumb">
+  			<li><a href="{{url('/')}}">Home</a></li>
+		</ol>
+
+		@if($msg)
+            <h2>{{$msg}}</h2>
+        @endif
+
+		<div class="box" style="margin-bottom: 20px; ">
+            <form class="form-inline mr-auto" action="{{url('search/all')}}" method="post">
+                {{csrf_field()}}
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="search" style="width:100%; margin-bottom:20px;" value="@if(isset($search)){{$search}}@endif">
+                <button class="btn btn-outline-success btn-rounded btn-sm my-0" type="submit">Search All</button>
+            </form>
+            <hr/>
+        </div>
+
+
+	  @if(count($data)>=1)
+	  	@foreach($data as $d)
+		<div class="post-preview">
+            <a href="{{url('article/'.$d->id)}}">
+                <h2 class="post-title">
+                    {{$d->article_title}}
+                </h2>
+                <h3 class="post-subtitle">
+                    {{$d->article_desc}}
+                </h3>
+            </a>
+            <p class="post-meta">
+                <span style="padding-right:30px;">By: {{$d->article_by}}</span> <span style="padding-right:30px;">On: {{$d->creation_date}}</span> <span>[Catergory: <a href="{{url('cate/'.$d->article_cate_id)}}">{{$d->cate_name}}]</a></span>
+            </p>
+        </div>
+        <hr>
+
+			<!--
+            <h3>{{$d->article_title}}</h3>
             <figure><img src="@if(!empty($d->article_thumb)){url($d->article_thumb)}}@else{{url('gfx/ryan_logo.png')}}@endif"></figure>
-            <ul class="nlist">
+            <ul>
                 <p>{{$d->article_desc}}</p>
                 <a title="{{$d->article_title}}" href="{{url('article/'.$d->id)}}" target="_blank" class="readmore">Read Article >></a>
             </ul>
-            <div class="line"></div>
-            @endforeach
+            <p class="dateview" style="padding-left:35px;"><span style="margin-right:30px;">{{$d->creation_date}}</span><span>By: {{$d->article_by}}</span></p>
+			-->
 
-            <div class="page">
-                {{$data->links()}}
-            </div>
+	  	@endforeach
+      	<div class="page" style="text-align:center;">
+		  @if(isset($search))
+        	{{$data->appends(['search' => $search])->links()}}
+		  @else
+			{{$data->links()}}
 		  @endif
         </div>
-        <aside class="right">
+	  @endif
 
-            <!-- Baidu Button BEGIN -->
-			<!--
-            <div id="bdshare" class="bdshare_t bds_tools_32 get-codes-bdshare"><a class="bds_tsina"></a><a class="bds_qzone"></a><a class="bds_tqq"></a><a class="bds_renren"></a><span class="bds_more"></span><a class="shareCount"></a></div>
-            <script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6574585" ></script>
-            <script type="text/javascript" id="bdshell_js"></script>
-            <script type="text/javascript">
-                document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
-            </script>
-			-->
-            <!-- Baidu Button END -->
-			@include('home.social_share')
+      </div>
+    </div>
+  </div>
 
-            <div class="news" style="float:left;">
-            </div>
-        </aside>
-    </article>
+  <hr>
+
 @endsection
-
 

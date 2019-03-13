@@ -21,6 +21,10 @@ class CommonController extends Controller
 		$navs_arr[1]->nav_url   = 'http://52.91.245.179/blog/cate/18';
         $navs_arr[1]->nav_name  = 'ES6';
         $navs_arr[1]->nav_alias = 'ECMAScript 6';
+		$navs_arr[2] = (object) [];
+        $navs_arr[2]->nav_url   = 'http://52.91.245.179/blog/cate/20';
+        $navs_arr[2]->nav_name  = 'React JS';
+        $navs_arr[2]->nav_alias = 'React JS Notes';
 		View::share('navs', $navs_arr);
 
 		//Most Views on the right side

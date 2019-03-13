@@ -15,7 +15,7 @@ class IndexController extends CommonController
 	public function index(){
 
         //get the most recently added articles, with paginatione(5)
-        $data = Article::orderBy('id', 'desc')->paginate(5);
+        $data = Article::Join('category', 'category.id', '=', 'article.article_cate_id')->select('article.*', 'category.cate_name as cate_name')->orderBy('article.id', 'desc')->paginate(10);
 
 		//get all the links
 		$links = Link::get();
@@ -28,7 +28,7 @@ class IndexController extends CommonController
 		$cate_info = $category_tb->find($id);
 
 		$article_tb = new Article();
-		$data = $article_tb->where('article_cate_id', $id)->orderBy('id', 'desc')->paginate(5);
+		$data = $article_tb->where('article_cate_id', $id)->orderBy('id', 'desc')->paginate(10);
 
 		$sub_cate = $category_tb->where('cate_pid', $id)->orderBy('cate_order', 'asc')->get();
 
@@ -40,7 +40,7 @@ class IndexController extends CommonController
 		$category_tb = new Category();
 
 		//$article_info = $article_tb->find($id);
-		$article_info = $article_tb->Join('category', 'article.article_cate_id', '=', 'category.id')->find($id);
+		$article_info = $article_tb->Join('category', 'article.article_cate_id', '=', 'category.id')->select('article.*', 'category.cate_name as cate_name')->find($id);
 
 		$article_pre = $article_tb->where('id', '<', $id)->orderBy('id', 'desc')->first();
 		$article_next = $article_tb->where('id', '>', $id)->orderBy('id', 'asc')->first();
@@ -65,13 +65,15 @@ class IndexController extends CommonController
 
 		$article_tb = new Article();
 
-		$result = $article_tb->Join('category', 'article.article_cate_id', '=', 'category.id');
+		$result = $article_tb->Join('category', 'article.article_cate_id', '=', 'category.id')->select('article.*', 'category.cate_name as cate_name');
 		foreach($arr as $k => $v){
 			$result = $result->orWhere('article.article_keywords', 'like', '%'.trim($v).'%');
 		}
-		$result = $result->paginate(5);
+		$count = count($result->get());
 
-		$msg = count($result).' results are found for "'.$search.'"';
+		$result = $result->paginate(10);
+
+		$msg = $count.' results are found for "'.$search.'"';
 		return view('home.search_all')->with(['msg'=>$msg, 'data'=>$result, 'search'=>$search]);
 	}
 
@@ -90,13 +92,17 @@ class IndexController extends CommonController
 
         $article_tb = new Article();
 
-        $result = $article_tb->Join('category', 'article.article_cate_id', '=', 'category.id');
+        $result = $article_tb->Join('category', 'article.article_cate_id', '=', 'category.id')->select('article.*', 'category.cate_name as cate_name');
         foreach($arr as $k => $v){
             $result = $result->orWhere('article.article_keywords', 'like', '%'.trim($v).'%');
         }
-        $result = $result->where('article.article_cate_id', '=', $id)->paginate(5);
+		$result = $result->where('article.article_cate_id', '=', $id);
 
-        $msg = count($result).' results are found for "'.$search.'"';
+		$count = count($result->get());
+
+        $result = $result->paginate(10);
+
+        $msg = $count.' results are found for "'.$search.'"';
         return view('home.search_cate')->with(['msg'=>$msg, 'data'=>$result, 'search'=>$search, 'cate_info'=>$cate_info]);
 	}
 }

@@ -64,13 +64,18 @@ Route::group(
 		Route::get('/cate/{id}', 'IndexController@list_cate');
 		Route::get('/article/{id}', 'IndexController@view_article');
 
-		Route::post('/search/all', 'IndexController@search_all');
-		Route::post('/search/cate/{id}', 'IndexController@search_cate');
+		Route::any('/search/all', 'IndexController@search_all');
+		Route::any('/search/cate/{id}', 'IndexController@search_cate');
 	}
 );
 
 
 Route::get('/get_encript', function () {
 	echo Illuminate\Support\Facades\Crypt::encrypt(Request::get('pass'));
+});
+
+Route::get('/test', function () {
+    //echo base_path();
+	//Storage::disk('local')->put('file.txt', 'Contents');
 });
 

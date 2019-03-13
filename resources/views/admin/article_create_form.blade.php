@@ -137,11 +137,29 @@
                         div.edui-box{overflow: hidden; height:22px;}
                     </style>
 					-->
+					<!--
+					<style>
+						.nicEdit-main{
+							line-height: 20px;
+						}
+					</style>
 					<textarea name="article_content" id="article_content" style="width:860px;height:500px;"></textarea>
 					<script src="{{asset('admin/assist/nicEdit/nicEdit.js')}}" type="text/javascript"></script>
 					<script type="text/javascript">
 						area2 = new nicEditor({fullPanel : true, iconsPath:"{{asset('admin/assist/nicEdit/nicEditorIcons.gif')}}"}).panelInstance('article_content');
 					</script>	
+					-->
+					<style>
+						.trumbowyg-editor {font-family: Consolas,monaco,monospace;}
+						.trumbowyg-editor p {margin-bottom: 0px; !important}
+					</style>
+					<textarea name="article_content" id="article_content" style="width:860px;height:500px;"></textarea>
+                    <script type="text/javascript" charset="utf-8" src="{{asset('admin/assist/trumbowyg/dist/trumbowyg.js')}}"></script>
+					<script type="text/javascript" charset="utf-8" src="{{asset('admin/assist/trumbowyg/dist/plugins/preformatted/trumbowyg.preformatted.js')}}"></script>
+                    <link rel="stylesheet" href="{{asset('admin/assist/trumbowyg/dist/ui/trumbowyg.css')}}">
+                    <script>
+                        $('#article_content').trumbowyg();
+                    </script>
                 </td>
             </tr>
 
